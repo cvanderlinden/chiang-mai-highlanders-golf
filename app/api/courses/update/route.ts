@@ -25,7 +25,7 @@ export async function PUT(request: Request) {
 
         return NextResponse.json({ message: 'Course updated successfully', course: updatedCourse }, { status: 200 });
     } catch (error) {
-        c// Ensure the error handling follows best practices
+        // Ensure the error handling follows best practices
         console.error('Error updating courses:', error);
 
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
