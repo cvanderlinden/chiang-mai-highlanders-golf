@@ -92,7 +92,7 @@ export default function CourseManagement() {
 
     return (
         <Card>
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
                 <h3 className="text-2xl font-semibold text-white">Manage Courses</h3>
                 <button
                     className="bg-gold text-darkGreen py-2 px-4 rounded-md hover:bg-darkGreen hover:text-white transition-all duration-300"

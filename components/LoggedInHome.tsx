@@ -66,62 +66,57 @@ export default function LoggedInHome({ user, onLogout }: LoggedInHomeProps) {
     };
 
     return (
-      <div className="w-[64em] mx-auto p-8 space-y-6">
-        <div className="flex justify-between items-center mb-16">
-          <div className="flex items-center space-x-4">
-            <Image
-              src="/img/logo_2.png"
-              alt="Chiang Mai Highlanders Golf Logo"
-              width={48}
-              height={48}
-              priority
+        <div className="max-w-screen-lg w-full mx-auto px-4 sm:px-6 md:px-8 py-8 space-y-6">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+                <div className="flex items-center space-x-4">
+                    <Image
+                        src="/img/logo_2.png"
+                        alt="Chiang Mai Highlanders Golf Logo"
+                        width={56}
+                        height={56}
+                        priority
+                    />
+                    <h1
+                        className="text-xl sm:text-2xl md:text-4xl font-bold text-white text-center"
+                        style={{ fontFamily: "Great Vibes, cursive" }}
+                    >
+                        Chiang Mai Highlanders Golf
+                    </h1>
+                </div>
+                <button
+                    onClick={onLogout}
+                    className="bg-darkGreen text-white py-2 px-4 rounded-md hover:bg-gold transition-all duration-300 mt-4 sm:mt-0"
+                >
+                    Logout
+                </button>
+            </div>
+
+            {/* Welcome Section */}
+            <div className="text-white rounded-lg mb-8 flex flex-col sm:flex-row justify-between items-center">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center sm:text-left">
+                    <span style={{ fontFamily: "Great Vibes, cursive" }}>
+                        Welcome, {user.firstName}
+                    </span>
+                </h2>
+                <p className="text-sm sm:text-md md:text-lg text-gray-300 flex items-center mt-4 sm:mt-0">
+                    <FontAwesomeIcon icon="calendar-alt" className="mr-2 text-gold" />
+                    {new Date().toLocaleDateString("en-US", { dateStyle: "full" })}
+                </p>
+            </div>
+
+            {/* Content */}
+            <HandicapCard
+                handicap={user.handicap}
+                user={user}
+                onScoreSubmit={() => {}}
+                onHandicapUpdate={() => {}}
             />
-            <h1
-              className="text-lg sm:text-xl md:text-2xl font-bold text-white"
-              style={{ fontFamily: "Great Vibes, cursive" }}
-            >
-              Chiang Mai Highlanders Golf
-            </h1>
-          </div>
-          <button
-            onClick={onLogout}
-            className="bg-darkGreen text-white py-2 px-4 rounded-md hover:bg-gold transition-all duration-300"
-          >
-            Logout
-          </button>
+            <UpcomingTeeOffs user={user} />
+            <RecentScores userId={user.userId} isAdmin={user.role === "administrator"} refresh={false} onHandicapUpdate={() => {}} />
+            <Leaderboard />
+            {user.role === "administrator" && <CourseManagement />}
+            <AdminPendingUsers />
         </div>
-
-        <div className="text-white rounded-lg mb-8 flex justify-between items-baseline">
-          <h2 className="text-5xl font-bold">
-            <span style={{ fontFamily: "Great Vibes, cursive" }}>
-              Welcome, {currentUser.firstName}
-            </span>
-          </h2>
-          <p className="text-md text-gray-300 flex items-baseline ml-8">
-            <FontAwesomeIcon icon="calendar-alt" className="mr-2 text-gold" />
-            {formatDate(currentTime)}
-            <FontAwesomeIcon icon="clock" className="ml-2 mr-2 text-gold" />
-            {formatTime(currentTime)}
-          </p>
-        </div>
-
-        <HandicapCard
-          handicap={currentUser.handicap}
-          user={currentUser}
-          onScoreSubmit={triggerRefresh}
-          onHandicapUpdate={handleHandicapUpdate}
-        />
-
-        <UpcomingTeeOffs user={currentUser} />
-        <RecentScores
-          userId={currentUser.userId}
-          isAdmin={currentUser.role === "administrator"}
-          refresh={refresh}
-          onHandicapUpdate={handleHandicapUpdate}
-        />
-        <Leaderboard />
-        {currentUser.role === "administrator" && <CourseManagement />}
-        <AdminPendingUsers />
-      </div>
     );
 }

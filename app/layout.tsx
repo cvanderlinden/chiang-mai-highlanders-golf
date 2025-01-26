@@ -1,3 +1,5 @@
+// app/layout.tsx
+
 import './globals.css';
 import React from 'react';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -35,7 +37,9 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className="bg-gray-100 text-gray-900">
-        <div className="min-h-screen flex flex-col">{children}</div>
+        <div className="min-h-screen flex flex-col">
+            {children}
+        </div>
         </body>
         </html>
     );

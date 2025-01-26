@@ -32,25 +32,27 @@ export default function Leaderboard() {
                 <p className="text-gray-300">Loading...</p>
             ) : (
                 <div>
-                    <div className="grid grid-cols-[40px_1fr_1fr_1fr_1fr] gap-4 text-sm font-semibold text-gray-300 mb-2">
+                    <div className="grid grid-cols-[40px_1fr_1fr_1fr] md:grid-cols-[40px_1fr_1fr_1fr_1fr] gap-4 text-sm font-semibold text-gray-300 mb-2">
                         <div className="text-center">#</div>
                         <div>Name</div>
                         <div>Rounds Played</div>
-                        <div>Best Score</div>
+                        {/* Hide Best Round on smaller screens */}
+                        <div className="hidden md:block">Best Score</div>
                         <div>Handicap</div>
                     </div>
                     <div className="space-y-2">
                         {leaderboard.map((entry, index) => (
                             <div
                                 key={index}
-                                className={`grid grid-cols-[40px_1fr_1fr_1fr_1fr] gap-4 p-2 rounded-md ${
+                                className={`grid grid-cols-[40px_1fr_1fr_1fr] md:grid-cols-[40px_1fr_1fr_1fr_1fr] gap-4 p-2 rounded-md ${
                                     index % 2 === 0 ? 'bg-gray-800 bg-opacity-50' : ''
                                 }`}
                             >
                                 <div className="text-gray-300 font-semibold text-center">{index + 1}</div>
                                 <div className="text-gold font-semibold">{entry.name}</div>
                                 <div className="text-gray-300">{entry.totalRounds}</div>
-                                <div className="text-gray-300">
+                                {/* Conditional Best Round display */}
+                                <div className="hidden md:block text-gray-300">
                                     {entry.bestScore
                                         ? `${entry.bestScore} (${entry.bestCourseName ?? 'N/A'})`
                                         : 'N/A'}

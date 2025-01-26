@@ -92,57 +92,42 @@ export default function RecentScores({ userId, isAdmin, refresh, onHandicapUpdat
     return (
         <Card>
             <h3 className="text-2xl font-semibold text-white mb-4">Recent Scores</h3>
-            <div className="grid grid-cols-8 gap-4 text-sm font-semibold text-gray-300 mb-2">
-                <div>Name</div>
-                <div>Course</div>
-                <div>Score</div>
-                <div>Handicap</div>
-                <div>Net Score</div>
-                <div>Holes</div>
-                <div>Date</div>
-                {isAdmin && <div>Action</div>}
-            </div>
-            <div className="space-y-2">
+            <div className="space-y-4">
                 {scores.map((score, index) => {
-                    const adjustedPar =
-                        score.holes === 9 ? Math.round(score.courseId.par / 2) : score.courseId.par;
-
+                    const adjustedPar = score.holes === 9 ? Math.round(score.courseId.par / 2) : score.courseId.par;
                     const grossDifference = calculateGrossScoreDifference(score.score, adjustedPar);
                     const netScoreDisplay = calculateNetScoreDisplay(score.netScore, adjustedPar);
 
                     return (
                         <div
                             key={score._id}
-                            className={`grid grid-cols-8 gap-4 p-2 rounded-md ${
-                                index % 2 === 0 ? 'bg-gray-800 bg-opacity-50' : ''
-                            } ${
+                            className={`p-4 rounded-md ${index % 2 === 0 ? 'bg-gray-800 bg-opacity-50' : 'bg-gray-700'} ${
                                 score.userId._id === userId ? 'font-bold text-gold' : 'text-white'
                             }`}
                         >
-                            <div>
-                                {score.userId.firstName} {score.userId.lastName.charAt(0)}.
-                            </div>
-                            <div>{score.course}</div>
-                            <div>
-                                {score.score} ({grossDifference})
-                            </div>
-                            <div>{score.handicap}</div>
-                            <div>{netScoreDisplay}</div>
-                            <div>{score.holes}</div>
-                            <div>
+                            <p className="text-lg">
+            <span className="font-semibold">
+                {score.userId.firstName} {score.userId.lastName.charAt(0)}.
+            </span>{' '}
+                                @ <span className="italic">{score.course}</span> on{' '}
                                 {new Date(score.date).toLocaleDateString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
                                 })}
-                            </div>
+                            </p>
+                            <p className="text-sm text-gray-300">
+                                Shot a <span className="text-gold font-bold">{score.score} ({grossDifference})</span> on {score.holes} holes
+                                with a handicap of <span className="text-gold font-bold">{score.handicap}</span>, resulting in a net score of{' '}
+                                <span className="text-gold font-bold">{netScoreDisplay}</span>.
+                            </p>
                             {(isAdmin || score.userId._id === userId) && (
-                                <div>
+                                <div className="mt-2">
                                     <button
-                                        className="text-red-500 hover:text-red-700"
+                                        className="text-red-500 hover:text-red-700 text-sm"
                                         onClick={() => handleDelete(score._id)}
                                     >
-                                        X
+                                        Delete
                                     </button>
                                 </div>
                             )}

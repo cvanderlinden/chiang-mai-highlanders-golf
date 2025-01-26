@@ -135,7 +135,7 @@ export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
 
     return (
         <Card>
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
                 <h3 className="text-2xl font-semibold text-white">Upcoming Tee Off Times</h3>
                 <button
                     className="bg-gold text-darkGreen py-2 px-4 rounded-md hover:bg-darkGreen hover:text-white transition-all duration-300"
@@ -160,30 +160,35 @@ export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
                             <div key={index} className="pb-4 border-b border-gray-600">
                                 <p className="text-2xl font-bold text-white">{teeOff.courseId?.name || teeOff.course}</p>
                                 <p className="text-gray-300 mt-2">
-                                    <FontAwesomeIcon icon="calendar-alt" className="mr-2 text-gold" />
+                                    <FontAwesomeIcon icon="calendar-alt" className="mr-2 text-gold"/>
                                     {formatDate(teeOff.date)}
-                                    <FontAwesomeIcon icon="clock" className="ml-2 mr-2 text-gold" />
+                                    <FontAwesomeIcon icon="clock" className="ml-2 mr-2 text-gold"/>
                                     {teeOff.time}
                                 </p>
-                                <div className="grid grid-cols-4 gap-4 mt-4">
+                                <div
+                                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4 items-stretch">
                                     {(teeOff.golfers || []).map((golfer: any, golferIndex: number) => (
-                                        <div key={golferIndex} className="flex items-center space-x-2 bg-[#ffffff24] rounded-md p-2">
-                                            <FontAwesomeIcon icon="golf-ball-tee" className="text-gold" />
-                                            <p className="text-gray-300">{golfer.name}</p>
+                                        <div
+                                            key={golferIndex}
+                                            className="flex items-center space-x-2 bg-[#ffffff24] rounded-md p-3 sm:p-2 min-w-0"
+                                        >
+                                            <FontAwesomeIcon icon="golf-ball-tee" className="text-gold"/>
+                                            <p className="text-gray-300 truncate">{golfer.name}</p>
                                             {golfer.userId._id === user.userId && (
                                                 <button
                                                     className="text-red-500 hover:text-red-700"
                                                     onClick={() => handleRemoveGolfer(teeOff._id, golfer.userId._id)}
                                                 >
-                                                    <FontAwesomeIcon icon="times" />
+                                                    <FontAwesomeIcon icon="times"/>
                                                 </button>
                                             )}
                                         </div>
                                     ))}
 
                                     {!isUserInTeeOff && (
-                                        <div className="flex items-center space-x-2 bg-[#ffffff24] rounded-md p-2">
-                                            <FontAwesomeIcon icon="golf-ball-tee" className="text-gold" />
+                                        <div
+                                            className="flex items-center space-x-2 bg-[#ffffff24] rounded-md p-3 sm:p-2 min-w-0">
+                                            <FontAwesomeIcon icon="golf-ball-tee" className="text-gold"/>
                                             <button
                                                 className="bg-gold text-darkGreen py-1 w-full rounded-md hover:bg-darkGreen hover:text-white transition-all duration-300"
                                                 onClick={() => handleAddSelf(teeOff._id)}
@@ -198,6 +203,7 @@ export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
                     })
                 )}
             </div>
+
 
             {totalPages > 1 && (
                 <div className="flex justify-center mt-4">

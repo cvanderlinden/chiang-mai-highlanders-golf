@@ -178,7 +178,7 @@ export default function HandicapCard({
 
     return (
         <Card>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-wrap justify-between items-center gap-2">
                 <h2 className="text-2xl font-semibold text-white">Current Handicap</h2>
                 <button
                     className="bg-gold text-darkGreen py-2 px-4 rounded-md hover:bg-darkGreen hover:text-white transition-all duration-300"
@@ -192,14 +192,13 @@ export default function HandicapCard({
                     {showForm ? 'Cancel' : 'Add Score'}
                 </button>
             </div>
-
             <p className="text-6xl text-gold font-bold">{handicap}</p>
 
             {showForm && (
-                <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
+                <form className="space-y-6 mt-4" onSubmit={handleSubmit}>
                     {/* Course and Date Row */}
-                    <div className="flex space-x-4">
-                        <div className="flex-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
                             <label className="text-sm font-semibold text-gray-300">Course</label>
                             <select
                                 value={course}
@@ -216,7 +215,7 @@ export default function HandicapCard({
                             </select>
                         </div>
 
-                        <div className="flex-1">
+                        <div>
                             <label className="text-sm font-semibold text-gray-300">Date</label>
                             <input
                                 type="date"
@@ -255,47 +254,49 @@ export default function HandicapCard({
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-4 gap-4">
-                                {/* Score Field */}
-                                <div>
-                                    <label className="block text-sm font-semibold text-center text-gray-300">Score</label>
-                                    <div className="relative flex items-center">
-                                        <button
-                                            type="button"
-                                            className="absolute left-0 text-gold px-3 hover:text-white"
-                                            onClick={() =>
-                                                setScore((prev) => {
-                                                    const curr = parseInt(prev || '0', 10);
-                                                    return curr > 1 ? (curr - 1).toString() : '1';
-                                                })
-                                            }
-                                        >
-                                            <FontAwesomeIcon icon="minus"/>
-                                        </button>
-                                        <input
-                                            type="number"
-                                            value={score}
-                                            onChange={(e) => setScore(e.target.value)}
-                                            className="w-full h-14 text-center bg-transparent text-gold font-bold text-4xl focus:outline-none mx-12"
-                                            placeholder="Score"
-                                            required
-                                            min={1}
-                                        />
-                                        <button
-                                            type="button"
-                                            className="absolute right-0 text-gold px-3 hover:text-white"
-                                            onClick={() =>
-                                                setScore((prev) => {
-                                                    const curr = parseInt(prev || '0', 10);
-                                                    return (curr + 1).toString();
-                                                })
-                                            }
-                                        >
-                                            <FontAwesomeIcon icon="plus"/>
-                                        </button>
-                                    </div>
+                            {/* Score Input Row */}
+                            <div className="flex flex-col items-center space-y-4">
+                                <label className="text-sm font-semibold text-gray-300">Score</label>
+                                <div className="relative flex items-center w-full max-w-md">
+                                    <button
+                                        type="button"
+                                        className="absolute left-0 text-gold px-5 py-3 text-2xl hover:text-white rounded-full"
+                                        onClick={() =>
+                                            setScore((prev) => {
+                                                const curr = parseInt(prev || '0', 10);
+                                                return curr > 1 ? (curr - 1).toString() : '1';
+                                            })
+                                        }
+                                    >
+                                        <FontAwesomeIcon icon="minus" />
+                                    </button>
+                                    <input
+                                        type="number"
+                                        value={score}
+                                        onChange={(e) => setScore(e.target.value)}
+                                        className="w-full h-24 text-center bg-transparent text-gold font-bold text-7xl focus:outline-none mx-10"
+                                        placeholder="Score"
+                                        required
+                                        min={1}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute right-0 text-gold px-5 py-3 text-2xl hover:text-white rounded-full"
+                                        onClick={() =>
+                                            setScore((prev) => {
+                                                const curr = parseInt(prev || '0', 10);
+                                                return (curr + 1).toString();
+                                            })
+                                        }
+                                    >
+                                        <FontAwesomeIcon icon="plus" />
+                                    </button>
                                 </div>
+                            </div>
 
+
+                            {/* Calculated Fields Row */}
+                            <div className="grid grid-cols-3 gap-4">
                                 {/* Course Par */}
                                 <div>
                                     <label className="block text-sm font-semibold text-center text-gray-300">Course Par</label>
@@ -318,7 +319,6 @@ export default function HandicapCard({
                                     </p>
                                 </div>
                             </div>
-
                         </>
                     )}
 
@@ -335,6 +335,8 @@ export default function HandicapCard({
                     )}
                 </form>
             )}
+
+
         </Card>
     );
 }
