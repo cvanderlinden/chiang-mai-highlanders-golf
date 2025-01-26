@@ -12,25 +12,21 @@ export const sendEmail = async ({
     html?: string;
 }) => {
     const transporter = nodemailer.createTransport({
-        host: 'localhost', // For your own SMTP server
-        port: 587, // Port used for sending emails
-        secure: false, // Secure false for port 587
-        auth: {
-            user: '', // Leave empty if no auth is needed
-            pass: '', // Leave empty if no auth is needed
-        },
+        host: 'localhost', // Use the local Postfix server
+        port: 25, // Use port 25 for sending emails with Postfix
+        secure: false, // Postfix is not using SSL/TLS by default
         tls: {
-            rejectUnauthorized: false, // Allow self-signed certificates if applicable
+            rejectUnauthorized: false, // Allow self-signed certificates
         },
     });
 
     try {
         const info = await transporter.sendMail({
-            from: `"Chiang Mai Highlanders Golf" <no-reply@highlandersgolf.online>`, // Replace with your email
-            to,
-            subject,
-            text,
-            html,
+            from: `"Chiang Mai Highlanders Golf" <no-reply@highlandersgolf.online>`, // Sender address
+            to, // Receiver email(s)
+            subject, // Subject line
+            text, // Plain text body
+            html, // HTML body
         });
 
         console.log(`Email sent: ${info.messageId}`);
