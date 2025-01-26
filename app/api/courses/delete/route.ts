@@ -15,6 +15,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'Course deleted successfully' }, { status: 200 });
     } catch (error) {
         console.error('Error deleting course:', error);
-        return NextResponse.json({ message: 'Error deleting course', error: error.message }, { status: 500 });
+
+        // Safely handle error type
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+        return NextResponse.json({ message: 'Error deleting course', error: errorMessage }, { status: 500 });
     }
 }
