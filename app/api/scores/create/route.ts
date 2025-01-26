@@ -26,6 +26,8 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'Score created successfully.', score: savedScore }, { status: 201 });
     } catch (error) {
         console.error('Error creating score:', error);
-        return NextResponse.json({ message: 'Error creating score', error: error.message }, { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+        return NextResponse.json({ message: 'Error fetching courses', error: errorMessage }, { status: 500 });
     }
 }

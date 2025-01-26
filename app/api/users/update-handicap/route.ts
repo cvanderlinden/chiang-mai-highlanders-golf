@@ -99,9 +99,11 @@ export async function POST(request: Request) {
         );
     } catch (error) {
         console.error('Error updating handicap:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
         return NextResponse.json(
-            { message: 'Error updating handicap', error: error.message },
-            { status: 500 }
+            {message: 'Error updating handicap', error: errorMessage},
+            {status: 500}
         );
     }
 }

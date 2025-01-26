@@ -76,6 +76,8 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'Score deleted successfully, but no other scores to recalculate handicap.' }, { status: 200 });
     } catch (error) {
         console.error('Error deleting score:', error);
-        return NextResponse.json({ message: 'Error deleting score.', error: error.message }, { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+        return NextResponse.json({ message: 'Error fetching courses', error: errorMessage }, { status: 500 });
     }
 }

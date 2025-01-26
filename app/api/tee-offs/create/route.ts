@@ -52,6 +52,8 @@ export async function POST(request: Request) {
         );
     } catch (error) {
         console.error('Error creating tee-off time:', error);
-        return NextResponse.json({ message: 'Error creating tee-off time', error: error.message }, { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+        return NextResponse.json({ message: 'Error fetching courses', error: errorMessage }, { status: 500 });
     }
 }
