@@ -62,7 +62,7 @@ export default function PageBackground({ children }: PageBackgroundProps) {
                 ></div>
             ))}
             <div className="absolute inset-0 bg-black opacity-70"></div>
-            <div className="relative z-10 flex flex-col flex-grow overflow-y-auto">
+            <div className="relative z-10 flex flex-col flex-grow overflow-y-auto px-4 sm:px-6 md:px-8">
                 {children}
             </div>
         </div>
