@@ -178,7 +178,7 @@ export default function HandicapCard({
 
     return (
         <Card>
-            <div className="flex flex-wrap justify-between items-center gap-2">
+            <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
                 <h2 className="text-2xl font-semibold text-white">Current Handicap</h2>
                 <button
                     className="bg-gold text-darkGreen py-2 px-4 rounded-md hover:bg-darkGreen hover:text-white transition-all duration-300"
