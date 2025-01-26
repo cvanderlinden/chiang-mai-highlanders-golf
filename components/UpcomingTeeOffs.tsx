@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Card from '@/components/Card';
 import AddTeeOffForm from '@/components/AddTeeOffForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,11 +19,7 @@ export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    useEffect(() => {
-        fetchTeeOffs();
-    }, [page]);
-
-    const fetchTeeOffs = async () => {
+    const fetchTeeOffs = useCallback(async () => {
         try {
             const response = await fetch(`/api/tee-offs/list?page=${page}&limit=10`);
             if (response.ok) {
@@ -36,7 +32,11 @@ export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
         } catch (error) {
             console.error('Error fetching tee-off times:', error);
         }
-    };
+    }, [page]);
+
+    useEffect(() => {
+        fetchTeeOffs();
+    }, [fetchTeeOffs]);
 
     const handleAddTeeOff = async (teeOffData: { course: string; date: string; time: string }) => {
         const lastNameInitial = user.lastName ? `${user.lastName.charAt(0).toUpperCase()}.` : '';
@@ -59,7 +59,7 @@ export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
             });
 
             if (response.ok) {
-                fetchTeeOffs();
+                await fetchTeeOffs();
                 setShowForm(false);
             } else {
                 console.error('Failed to add new tee-off time');
@@ -96,7 +96,7 @@ export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
 
             if (!response.ok) {
                 console.error('Failed to add self to tee-off time');
-                fetchTeeOffs();
+                await fetchTeeOffs();
             }
         } catch (error) {
             console.error('Error adding self to tee-off time:', error);
@@ -121,7 +121,7 @@ export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
 
             if (!response.ok) {
                 console.error('Failed to remove golfer');
-                fetchTeeOffs();
+                await fetchTeeOffs();
             }
         } catch (error) {
             console.error('Error removing golfer:', error);
@@ -160,32 +160,30 @@ export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
                             <div key={index} className="pb-4 border-b border-gray-600">
                                 <p className="text-2xl font-bold text-white">{teeOff.courseId?.name || teeOff.course}</p>
                                 <p className="text-gray-300 mt-2">
-                                    <FontAwesomeIcon icon="calendar-alt" className="mr-2 text-gold"/>
+                                    <FontAwesomeIcon icon="calendar-alt" className="mr-2 text-gold" />
                                     {formatDate(teeOff.date)}
-                                    <FontAwesomeIcon icon="clock" className="ml-2 mr-2 text-gold"/>
+                                    <FontAwesomeIcon icon="clock" className="ml-2 mr-2 text-gold" />
                                     {teeOff.time}
                                 </p>
                                 <div className="grid grid-cols-4 gap-4 mt-4">
                                     {(teeOff.golfers || []).map((golfer: any, golferIndex: number) => (
-                                        <div key={golferIndex}
-                                             className="flex items-center space-x-2 bg-[#ffffff24] rounded-md p-2">
-                                            <FontAwesomeIcon icon="golf-ball-tee" className="text-gold"/>
+                                        <div key={golferIndex} className="flex items-center space-x-2 bg-[#ffffff24] rounded-md p-2">
+                                            <FontAwesomeIcon icon="golf-ball-tee" className="text-gold" />
                                             <p className="text-gray-300">{golfer.name}</p>
                                             {golfer.userId._id === user.userId && (
                                                 <button
                                                     className="text-red-500 hover:text-red-700"
                                                     onClick={() => handleRemoveGolfer(teeOff._id, golfer.userId._id)}
                                                 >
-                                                    <FontAwesomeIcon icon="times"/>
+                                                    <FontAwesomeIcon icon="times" />
                                                 </button>
                                             )}
                                         </div>
                                     ))}
 
-                                    {/* Show "Join" button if the user is not in the tee-off */}
                                     {!isUserInTeeOff && (
                                         <div className="flex items-center space-x-2 bg-[#ffffff24] rounded-md p-2">
-                                            <FontAwesomeIcon icon="golf-ball-tee" className="text-gold"/>
+                                            <FontAwesomeIcon icon="golf-ball-tee" className="text-gold" />
                                             <button
                                                 className="bg-gold text-darkGreen py-1 w-full rounded-md hover:bg-darkGreen hover:text-white transition-all duration-300"
                                                 onClick={() => handleAddSelf(teeOff._id)}

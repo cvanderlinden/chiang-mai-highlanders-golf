@@ -3,9 +3,17 @@
 import { useState } from 'react';
 import LoginForm from '@/components/LoginForm';
 import RegisterForm from '@/components/RegisterForm';
+import Image from 'next/image';
 
 interface LoggedOutHomeProps {
-    onLogin: (user: { userId: string; firstName: string }) => void;
+    onLogin: (user: {
+        userId: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        role: string;
+        handicap: number;
+    }) => void;
 }
 
 export default function LoggedOutHome({ onLogin }: LoggedOutHomeProps) {
@@ -34,7 +42,14 @@ export default function LoggedOutHome({ onLogin }: LoggedOutHomeProps) {
 
     return (
         <div className="flex flex-col items-center justify-center mt-40">
-            <img src="/img/logo_2.png" alt="Chiang Mai Highlanders Golf Logo" className="w-24 h-auto mb-12" />
+            <Image
+                src="/img/logo_2.png"
+                alt="Chiang Mai Highlanders Golf Logo"
+                width={96} // Explicit width (24 * 4 since `w-24` equals 96px)
+                height={96} // Adjust as needed (set `auto` height with `layout="intrinsic"` if proportions must be preserved)
+                className="mb-12" // Retain the margin class
+                priority // Loads the image faster since it's likely above the fold
+            />
             <h1 className="text-white text-6xl font-bold mb-8" style={{ fontFamily: 'Great Vibes, cursive' }}>
                 Chiang Mai Highlanders Golf
             </h1>

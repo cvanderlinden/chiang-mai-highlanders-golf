@@ -9,6 +9,10 @@ interface Course {
     _id: string;
     name: string;
     par: number;
+    slopeRating: number;
+    courseRating: number;
+    mapLink?: string;
+    status: string;
 }
 
 interface User {

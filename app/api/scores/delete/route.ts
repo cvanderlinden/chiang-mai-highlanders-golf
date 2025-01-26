@@ -49,6 +49,13 @@ export async function POST(request: Request) {
                 { new: true }
             );
 
+            if (!updatedUser) {
+                return NextResponse.json(
+                    { message: 'User not found during handicap update.' },
+                    { status: 404 }
+                );
+            }
+
             // Generate a new token with the updated handicap
             const token = sign(
                 {
@@ -78,6 +85,6 @@ export async function POST(request: Request) {
         console.error('Error deleting score:', error);
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
 
-        return NextResponse.json({ message: 'Error fetching courses', error: errorMessage }, { status: 500 });
+        return NextResponse.json({ message: 'Error deleting score.', error: errorMessage }, { status: 500 });
     }
 }

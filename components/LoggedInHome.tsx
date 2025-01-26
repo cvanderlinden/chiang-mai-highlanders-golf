@@ -8,6 +8,7 @@ import RecentScores from '@/components/RecentScores';
 import Leaderboard from '@/components/Leaderboard';
 import CourseManagement from '@/components/CourseManagement';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Image from 'next/image';
 
 interface LoggedInHomeProps {
     user: {
@@ -68,10 +69,12 @@ export default function LoggedInHome({ user, onLogout }: LoggedInHomeProps) {
         <div className="w-[64em] mx-auto p-8 space-y-6">
             <div className="flex justify-between items-center mb-16">
                 <div className="flex items-center space-x-4">
-                    <img
+                    <Image
                         src="/img/logo_2.png"
                         alt="Chiang Mai Highlanders Golf Logo"
-                        className="w-12 h-auto"
+                        width={48}
+                        height={48}
+                        priority
                     />
                     <h2 className="text-2xl font-bold text-white" style={{ fontFamily: 'Great Vibes, cursive' }}>
                         Chiang Mai Highlanders Golf

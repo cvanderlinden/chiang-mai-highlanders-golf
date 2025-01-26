@@ -1,18 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 interface PageBackgroundProps {
     children: React.ReactNode;
 }
 
 export default function PageBackground({ children }: PageBackgroundProps) {
-    const images = [
-        '/img/course_1.jpg',
-        '/img/course_2.jpg',
-        '/img/course_3.jpg',
-        '/img/course_4.jpg',
-        '/img/course_5.jpg',
-        '/img/course_6.jpg',
-    ];
+    const images = useMemo(
+        () => [
+            '/img/course_1.jpg',
+            '/img/course_2.jpg',
+            '/img/course_3.jpg',
+            '/img/course_4.jpg',
+            '/img/course_5.jpg',
+            '/img/course_6.jpg',
+        ],
+        []
+    );
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [loaded, setLoaded] = useState(false);

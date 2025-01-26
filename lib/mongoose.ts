@@ -32,7 +32,7 @@ async function connectToDatabase() {
         };
 
         cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-            return mongoose;
+            return mongoose.connection;
         });
     }
     cached.conn = await cached.promise;

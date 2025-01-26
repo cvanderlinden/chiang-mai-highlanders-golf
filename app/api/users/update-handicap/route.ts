@@ -29,7 +29,6 @@ export async function POST(request: Request) {
         // Calculate differentials for all scores
         const differentials = await Promise.all(
             scores.map(async (score) => {
-                // Fetch course details for the score
                 const course = await Course.findById(score.courseId);
 
                 if (!course) {
@@ -38,14 +37,11 @@ export async function POST(request: Request) {
                 }
 
                 const { slopeRating, courseRating } = course;
-
-                // Calculate differential
                 const differential = ((score.score - courseRating) * 113) / slopeRating;
                 return differential;
             })
         );
 
-        // Filter out null differentials (if a course wasn't found)
         const validDifferentials = differentials.filter((d) => d !== null);
 
         if (validDifferentials.length === 0) {
@@ -55,21 +51,14 @@ export async function POST(request: Request) {
             );
         }
 
-        // Sort differentials in ascending order (lower is better)
         validDifferentials.sort((a, b) => a - b);
 
-        // Select the best differentials (e.g., top 8 out of the last 20)
         const bestDifferentials = validDifferentials.slice(0, 8);
-
-        // Calculate the average of the best differentials
         const averageDifferential =
             bestDifferentials.reduce((acc, diff) => acc + diff, 0) /
             bestDifferentials.length;
 
-        // Multiply by 0.96 for the official handicap index adjustment
         let newHandicap = Math.max(averageDifferential * 0.96, 0);
-
-        // Round to the nearest integer
         newHandicap = Math.round(newHandicap);
 
         // Update the user's handicap in the database
@@ -79,7 +68,13 @@ export async function POST(request: Request) {
             { new: true }
         );
 
-        // Generate a new token with the updated handicap
+        if (!updatedUser) {
+            return NextResponse.json(
+                { message: 'User not found.' },
+                { status: 404 }
+            );
+        }
+
         const token = sign(
             {
                 userId: updatedUser._id,
@@ -87,7 +82,7 @@ export async function POST(request: Request) {
                 lastName: updatedUser.lastName,
                 email: updatedUser.email,
                 role: updatedUser.role,
-                handicap: updatedUser.handicap, // Ensure it's the rounded integer value
+                handicap: updatedUser.handicap,
             },
             JWT_SECRET,
             { expiresIn: '30d' }
@@ -102,8 +97,8 @@ export async function POST(request: Request) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
 
         return NextResponse.json(
-            {message: 'Error updating handicap', error: errorMessage},
-            {status: 500}
+            { message: 'Error updating handicap', error: errorMessage },
+            { status: 500 }
         );
     }
 }

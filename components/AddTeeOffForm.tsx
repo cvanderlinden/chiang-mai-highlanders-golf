@@ -73,72 +73,80 @@ export default function AddTeeOffForm({ onAdd, onCancel }: AddTeeOffFormProps) {
     };
 
     return (
-        <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
-            <div className="flex space-x-4">
-                <div className="flex-1">
-                    <label className="text-sm font-semibold text-gray-300">Course</label>
-                    <select
-                        value={course}
-                        onChange={(e) => setCourse(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold text-gray-900"
-                    >
-                        {courses.map((course) => (
-                            <option key={course._id} value={course._id}>
-                                {course.name}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.course && <p className="text-red-500 text-sm mt-1">{errors.course}</p>}
-                </div>
-                <div className="flex-1">
-                    <label className="text-sm font-semibold text-gray-300">Date</label>
-                    <input
-                        type="date"
-                        value={date}
-                        min={new Date().toISOString().split('T')[0]} // Restrict to today and future dates
-                        onChange={(e) => setDate(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold text-gray-900"
-                    />
-                    {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
-                </div>
-                <div className="flex-1">
-                    <label className="text-sm font-semibold text-gray-300">Time</label>
-                    <select
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold text-gray-900"
-                    >
-                        {[...Array(48).keys()].map((i) => {
-                            const hour = Math.floor(i / 4) + 6;
-                            const minutes = (i % 4) * 15;
-                            const timeValue = `${hour.toString().padStart(2, '0')}:${minutes
-                                .toString()
-                                .padStart(2, '0')}`;
-                            return (
-                                <option key={timeValue} value={timeValue}>
-                                    {timeValue}
-                                </option>
-                            );
-                        })}
-                    </select>
-                    {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
-                </div>
-            </div>
-            <div className="flex space-x-4">
-                <button
-                    type="submit"
-                    className="bg-gold text-darkGreen py-2 px-4 rounded-md hover:bg-darkGreen hover:text-white transition-all duration-300"
-                >
-                    Add
-                </button>
-                <button
-                    type="button"
-                    onClick={onCancel}
-                    className="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-all duration-300"
-                >
-                    Cancel
-                </button>
-            </div>
-        </form>
+      <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
+        <div className="flex space-x-4">
+          <div className="flex-1">
+            <label className="text-sm font-semibold text-gray-300">
+              Course
+            </label>
+            <select
+              value={course}
+              onChange={(e) => setCourse(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold text-gray-900"
+            >
+              {courses.map((course) => (
+                <option key={course._id} value={course._id}>
+                  {course.name}
+                </option>
+              ))}
+            </select>
+            {errors.course && (
+              <p className="text-red-500 text-sm mt-1">{errors.course}</p>
+            )}
+          </div>
+          <div className="flex-1">
+            <label className="text-sm font-semibold text-gray-300">Date</label>
+            <input
+              type="date"
+              value={date}
+              min={new Date().toISOString().split("T")[0]} // Restrict to today and future dates
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold text-gray-900"
+            />
+            {errors.date && (
+              <p className="text-red-500 text-sm mt-1">{errors.date}</p>
+            )}
+          </div>
+          <div className="flex-1">
+            <label className="text-sm font-semibold text-gray-300">Time</label>
+            <select
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold text-gray-900"
+            >
+              {Array.from({ length: 48 }, (_, i) => {
+                const hour = Math.floor(i / 4) + 6;
+                const minutes = (i % 4) * 15;
+                const timeValue = `${hour.toString().padStart(2, "0")}:${minutes
+                  .toString()
+                  .padStart(2, "0")}`;
+                return (
+                  <option key={timeValue} value={timeValue}>
+                    {timeValue}
+                  </option>
+                );
+              })}
+            </select>
+            {errors.time && (
+              <p className="text-red-500 text-sm mt-1">{errors.time}</p>
+            )}
+          </div>
+        </div>
+        <div className="flex space-x-4">
+          <button
+            type="submit"
+            className="bg-gold text-darkGreen py-2 px-4 rounded-md hover:bg-darkGreen hover:text-white transition-all duration-300"
+          >
+            Add
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-all duration-300"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     );
 }
