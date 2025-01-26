@@ -18,6 +18,28 @@ const nextConfig = {
     env: {
         MONGODB_URI: process.env.MONGODB_URI,
     },
+    output: 'standalone', // Optimizes for deployment
+    poweredByHeader: false, // Optional: Security enhancement by hiding "X-Powered-By"
+    headers: async () => [
+        {
+            source: '/_next/static/:path*',
+            headers: [
+                {
+                    key: 'Cache-Control',
+                    value: 'public, max-age=31536000, immutable',
+                },
+            ],
+        },
+        {
+            source: '/:path*',
+            headers: [
+                {
+                    key: 'Cache-Control',
+                    value: 'public, max-age=31536000, must-revalidate',
+                },
+            ],
+        },
+    ],
 };
 
 export default nextConfig;
