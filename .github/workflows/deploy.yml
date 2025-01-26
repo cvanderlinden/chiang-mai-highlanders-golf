@@ -1,0 +1,46 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up SSH agent
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Step 3: Deploy code to server
+      - name: Deploy code
+        run: |
+          ssh -o StrictHostKeyChecking=no deploy@157.230.241.139 << 'EOF'
+            # Navigate to the project directory
+            cd /home/deploy/chiang-mai-highlanders-golf
+
+            # Pull the latest changes
+            git reset --hard
+            git pull
+
+            # Install dependencies
+            npm install
+
+            # Build the project
+            npm run build
+
+            # Update permissions and ownership
+            sudo chmod -R 755 /home/deploy/chiang-mai-highlanders-golf
+            sudo chown -R deploy:www-data /home/deploy/chiang-mai-highlanders-golf
+
+            # Reload PM2
+            pm2 reload highlanders-golf || pm2 start npm --name "highlanders-golf" -- start
+          EOF

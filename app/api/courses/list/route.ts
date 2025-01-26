@@ -10,8 +10,6 @@ export async function GET() {
 
         const courses = await Course.find({ status: 'active' }).sort({ name: 1 }).collation({ locale: "en", strength: 2 });
 
-        console.log('Fetched courses:', courses);
-
         return NextResponse.json(courses, { status: 200 });
     } catch (error) {
         // Ensure the error handling follows best practices
