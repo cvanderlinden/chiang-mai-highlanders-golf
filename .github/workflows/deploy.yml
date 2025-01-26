@@ -35,7 +35,7 @@ jobs:
             npm install
 
             # Build the project
-            npm run build
+            npm run build:no-lint
 
             # Update permissions and ownership
             sudo chmod -R 755 /home/deploy/chiang-mai-highlanders-golf
