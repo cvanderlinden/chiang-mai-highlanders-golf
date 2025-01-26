@@ -24,6 +24,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'Course created successfully', course: newCourse }, { status: 201 });
     } catch (error) {
         console.error('Error creating course:', error);
-        return NextResponse.json({ message: 'Error creating course', error: error.message }, { status: 500 });
+
+        // Safely handle error type
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+        return NextResponse.json({ message: 'Error creating course', error: errorMessage }, { status: 500 });
     }
 }
