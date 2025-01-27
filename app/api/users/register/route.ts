@@ -38,19 +38,6 @@ export async function POST(request: Request) {
 
         await newUser.save();
 
-        // Send an email notification to the admin
-        await sendEmail({
-            to: 'craig.vanderlinden@gmail.com', // Admin's email address
-            subject: 'New User Registration',
-            text: `A new user has registered on Chiang Mai Highlanders Golf.\n\nName: ${firstName} ${lastName}\nEmail: ${email}`,
-            html: `
-                <h1>New User Registration</h1>
-                <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p>The user's status is currently set to "pending".</p>
-            `,
-        });
-
         return NextResponse.json({ message: 'User registered successfully.' }, { status: 201 });
     } catch (error) {
         console.error('Error registering user:', error);
