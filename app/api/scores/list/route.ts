@@ -37,7 +37,10 @@ export async function GET(request: Request) {
             console.log(`Removed ${invalidScoreIds.length} invalid scores`);
         }
 
-        return NextResponse.json({ scores: validScores, totalScores }, { status: 200 });
+        // Set cache control headers
+        const response = NextResponse.json({ scores: validScores, totalScores }, { status: 200 });
+        response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
+        return response;
     } catch (error) {
         console.error('Error retrieving scores:', error);
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';

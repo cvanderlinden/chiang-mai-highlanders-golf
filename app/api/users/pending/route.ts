@@ -11,7 +11,9 @@ export async function GET() {
         await connectToDatabase();
 
         const pendingUsers = await User.find({ status: 'pending' });
-        return NextResponse.json({ users: pendingUsers });
+        const response = NextResponse.json({ users: pendingUsers });
+        response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
+        return response;
     } catch (error) {
         console.error('Error fetching pending users:', error);
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

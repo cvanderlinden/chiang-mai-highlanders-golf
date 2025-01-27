@@ -31,12 +31,14 @@ export async function GET(request: Request) {
 
         const totalTeeOffs = await TeeOff.countDocuments({ status: 'active', date: { $gte: today } });
 
-        return NextResponse.json({
+        const response = NextResponse.json({
             teeOffs,
             total: totalTeeOffs,
             page,
             totalPages: Math.ceil(totalTeeOffs / limit),
         }, { status: 200 });
+        response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
+        return response;
     } catch (error) {
         console.error('Error retrieving Tee Off times:', error);
         return NextResponse.json({ message: 'Error retrieving Tee Off times', error }, { status: 500 });

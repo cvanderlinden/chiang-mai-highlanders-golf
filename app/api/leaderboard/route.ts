@@ -56,7 +56,9 @@ export async function GET() {
             { $sort: { handicap: 1, bestScore: 1 } }, // Sort by handicap, then best score
         ]);
 
-        return NextResponse.json(leaderboard, { status: 200 });
+        const response = NextResponse.json(leaderboard, { status: 200 });
+        response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
+        return response;
     } catch (error) {
         console.error('Error fetching leaderboard:', error);
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';

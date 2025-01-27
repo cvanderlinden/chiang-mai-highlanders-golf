@@ -12,7 +12,9 @@ export async function GET() {
 
         const courses = await Course.find({ status: 'active' }).sort({ name: 1 }).collation({ locale: "en", strength: 2 });
 
-        return NextResponse.json(courses, { status: 200 });
+        const response = NextResponse.json(courses, { status: 200 });
+        response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
+        return response;
     } catch (error) {
         // Ensure the error handling follows best practices
         console.error('Error fetching courses:', error);

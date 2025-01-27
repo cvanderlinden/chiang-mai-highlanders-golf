@@ -91,6 +91,14 @@ export default function RecentScores({ userId, isAdmin, refresh, onHandicapUpdat
         }
     };
 
+    const calculateNetScoreDisplay = (netScore: number, par: number, holes: number) => {
+        const effectiveNetScore = holes === 9 ? netScore * 2 : netScore; // Double net score for 9 holes
+        const adjustedPar = holes === 9 ? par * 2 : par; // Double par for 9 holes
+        const netScoreAdjusted = adjustedPar + effectiveNetScore; // Add net score to par
+        const difference = effectiveNetScore > 0 ? `+${effectiveNetScore}` : `${effectiveNetScore}`; // Format difference
+        return `${netScoreAdjusted} (${difference})`; // Final display value
+    };
+
     return (
         <Card>
             <h3 className="text-2xl font-semibold text-white mb-4">Recent Scores</h3>
@@ -99,7 +107,7 @@ export default function RecentScores({ userId, isAdmin, refresh, onHandicapUpdat
                     const adjustedPar = score.holes === 9 ? Math.round(score.courseId.par / 2) : score.courseId.par;
                     const adjustedHandicap = score.holes === 9 ? score.handicap / 2 : score.handicap; // Adjust handicap for 9 holes
                     const grossDifference = calculateGrossScoreDifference(score.score, adjustedPar);
-                    const netScoreDisplay = calculateNetScoreDisplay(score.netScore, adjustedPar); // Uses already stored netScore
+                    const netScoreDisplay = calculateNetScoreDisplay(score.netScore, adjustedPar, score.holes); // Pass holes for adjustment
 
                     return (
                         <div
