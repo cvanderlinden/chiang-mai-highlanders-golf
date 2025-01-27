@@ -15,9 +15,9 @@ export async function GET(request: Request) {
 
         await connectToDatabase();
 
-        // Retrieve all scores and populate user and course details
+        // Retrieve all scores, sorted by createdAt (down to the second), and populate user and course details
         const scores = await Score.find({})
-            .sort({ date: -1 })
+            .sort({ createdAt: -1 }) // Sort by createdAt in descending order
             .limit(limit)
             .populate('userId', 'firstName lastName') // Populate user details
             .populate('courseId', 'par'); // Populate course details (e.g., par)
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
             console.log(`Removed ${invalidScoreIds.length} invalid scores`);
         }
 
-        // Set cache control headers
+        // Prepare response with cache control
         const response = NextResponse.json({ scores: validScores, totalScores }, { status: 200 });
         response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
         return response;
@@ -45,6 +45,6 @@ export async function GET(request: Request) {
         console.error('Error retrieving scores:', error);
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
 
-        return NextResponse.json({ message: 'Error fetching courses', error: errorMessage }, { status: 500 });
+        return NextResponse.json({ message: 'Error fetching scores', error: errorMessage }, { status: 500 });
     }
 }

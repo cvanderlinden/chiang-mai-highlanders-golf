@@ -1,6 +1,6 @@
 // components/HandicapCard.tsx
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '@/components/Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Cookies from "js-cookie";
@@ -29,6 +29,7 @@ interface HandicapCardProps {
     user: User;
     onScoreSubmit: () => void;
     onHandicapUpdate?: (newHandicap: number) => void;
+    addNewScore: (newScore: any) => void;
 }
 
 export const dynamic = 'force-dynamic';
@@ -38,6 +39,7 @@ export default function HandicapCard({
                                          user,
                                          onScoreSubmit,
                                          onHandicapUpdate,
+                                         addNewScore,
                                      }: HandicapCardProps) {
     const [showForm, setShowForm] = useState(false);
     const [date, setDate] = useState('');
@@ -105,7 +107,9 @@ export default function HandicapCard({
 
         const grossScore = parseInt(score, 10);
         const adjustedHandicap = holes === 9 ? Math.round(handicap / 2) : handicap; // Adjust for 9 holes
-        const netScoreValue = Math.round(grossScore - courseRating - (adjustedHandicap * slopeRating / 113));
+        const netScoreValue = Math.round(
+            grossScore - courseRating - (adjustedHandicap * slopeRating) / 113
+        );
 
         const scoreData = {
             userId: user.userId,
@@ -113,8 +117,8 @@ export default function HandicapCard({
             course: selectedCourse.name,
             date,
             score: grossScore,
-            handicap: Number(handicap), // Store full handicap
-            netScore: netScoreValue, // Adjusted net score
+            handicap: Number(handicap),
+            netScore: netScoreValue,
             holes,
         };
 
@@ -128,9 +132,12 @@ export default function HandicapCard({
             const responseData = await response.json();
             if (response.ok) {
                 console.log('Score created:', responseData.score);
-                resetForm(true); // Reset and close the form
+                resetForm(true);
                 await updateHandicap();
                 onScoreSubmit();
+
+                // Fetch and add the populated score
+                await addNewScore(responseData.score._id);
             } else {
                 console.error('Failed to create score:', responseData.message);
             }

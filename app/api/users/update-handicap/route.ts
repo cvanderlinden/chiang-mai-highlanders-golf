@@ -16,17 +16,18 @@ export async function POST(request: Request) {
 
         await connectToDatabase();
 
-        // Fetch the user's scores, sorted by date (newest first)
+        // Fetch the user's scores
         const scores = await Score.find({ userId }).sort({ date: -1 });
 
         if (scores.length === 0) {
+            console.error(`No scores found for user: ${userId}`);
             return NextResponse.json(
                 { message: 'No scores available for this user.' },
                 { status: 400 }
             );
         }
 
-        // Calculate differentials for all scores
+        // Calculate differentials
         const differentials = await Promise.all(
             scores.map(async (score) => {
                 const course = await Course.findById(score.courseId);
@@ -37,14 +38,27 @@ export async function POST(request: Request) {
                 }
 
                 const { slopeRating, courseRating } = course;
-                const differential = ((score.score - courseRating) * 113) / slopeRating;
+
+                if (!slopeRating || !courseRating) {
+                    console.error(`Invalid course data for courseId: ${score.courseId}`);
+                    return null;
+                }
+
+                // Adjust for 9 holes
+                const adjustedCourseRating = score.holes === 9 ? courseRating / 2 : courseRating;
+                const adjustedSlopeRating = score.holes === 9 ? slopeRating : slopeRating;
+
+                const differential = ((score.score - adjustedCourseRating) * 113) / adjustedSlopeRating;
                 return differential;
             })
         );
 
+
+        // Filter out invalid differentials
         const validDifferentials = differentials.filter((d) => d !== null);
 
         if (validDifferentials.length === 0) {
+            console.error(`No valid differentials found for user: ${userId}`);
             return NextResponse.json(
                 { message: 'No valid scores with course data available.' },
                 { status: 400 }
@@ -53,6 +67,7 @@ export async function POST(request: Request) {
 
         validDifferentials.sort((a, b) => a - b);
 
+        // Use the best 8 differentials
         const bestDifferentials = validDifferentials.slice(0, 8);
         const averageDifferential =
             bestDifferentials.reduce((acc, diff) => acc + diff, 0) /
@@ -61,7 +76,9 @@ export async function POST(request: Request) {
         let newHandicap = Math.max(averageDifferential * 0.96, 0);
         newHandicap = Math.round(newHandicap);
 
-        // Update the user's handicap in the database
+        console.log(`Calculated handicap for user ${userId}: ${newHandicap}`);
+
+        // Update the user's handicap
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             { handicap: newHandicap },
@@ -69,12 +86,16 @@ export async function POST(request: Request) {
         );
 
         if (!updatedUser) {
+            console.error(`User not found for userId: ${userId}`);
             return NextResponse.json(
                 { message: 'User not found.' },
                 { status: 404 }
             );
         }
 
+        console.log(`Updated user: ${updatedUser}`);
+
+        // Generate a new token with the updated handicap
         const token = sign(
             {
                 userId: updatedUser._id,
@@ -102,3 +123,4 @@ export async function POST(request: Request) {
         );
     }
 }
+
