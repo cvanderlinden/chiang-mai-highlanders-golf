@@ -10,6 +10,14 @@ export async function POST(request: Request) {
 
         await connectToDatabase();
 
+        // Adjust handicap for 9-hole games
+        const adjustedHandicap = holes === 9 ? Math.round( handicap / 2 ) : handicap;
+
+        // Recalculate netScore server-side for accuracy
+        const recalculatedNetScore = Math.round(
+            score - (adjustedHandicap * 113) / 113 // Simplified server-side calculation
+        );
+
         const newScore = new Score({
             userId,
             courseId,
@@ -17,7 +25,7 @@ export async function POST(request: Request) {
             date,
             score,
             handicap,
-            netScore,
+            netScore: recalculatedNetScore,
             holes,
         });
 

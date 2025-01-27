@@ -10,6 +10,8 @@ interface User {
     email: string;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminPendingUsers() {
     const [pendingUsers, setPendingUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);

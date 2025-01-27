@@ -10,6 +10,8 @@ interface Course {
     name: string;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function AddTeeOffForm({ onAdd, onCancel }: AddTeeOffFormProps) {
     const [course, setCourse] = useState('');
     const [date, setDate] = useState('');

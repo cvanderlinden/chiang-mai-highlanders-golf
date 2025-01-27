@@ -13,6 +13,8 @@ interface UpcomingTeeOffsProps {
     user: { userId: string; firstName: string; lastName: string | undefined };
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function UpcomingTeeOffs({ user }: UpcomingTeeOffsProps) {
     const [showForm, setShowForm] = useState(false);
     const [teeOffs, setTeeOffs] = useState<any[]>([]);

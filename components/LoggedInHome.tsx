@@ -22,6 +22,8 @@ interface LoggedInHomeProps {
     onLogout: () => void;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function LoggedInHome({ user, onLogout }: LoggedInHomeProps) {
     const [currentTime, setCurrentTime] = useState(new Date());
     // Store the user in state so we can update the handicap locally

@@ -4,6 +4,8 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongoose';
 import User from '@/models/User';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     try {
         await connectToDatabase();

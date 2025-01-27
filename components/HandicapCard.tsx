@@ -31,6 +31,8 @@ interface HandicapCardProps {
     onHandicapUpdate?: (newHandicap: number) => void;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function HandicapCard({
                                          handicap,
                                          user,
@@ -102,7 +104,8 @@ export default function HandicapCard({
         const { par, courseRating, slopeRating } = selectedCourse;
 
         const grossScore = parseInt(score, 10);
-        const netScoreValue = Math.round(grossScore - courseRating - (handicap * slopeRating / 113));
+        const adjustedHandicap = holes === 9 ? Math.round(handicap / 2) : handicap; // Adjust for 9 holes
+        const netScoreValue = Math.round(grossScore - courseRating - (adjustedHandicap * slopeRating / 113));
 
         const scoreData = {
             userId: user.userId,
@@ -110,8 +113,8 @@ export default function HandicapCard({
             course: selectedCourse.name,
             date,
             score: grossScore,
-            handicap: Number(handicap),
-            netScore: netScoreValue,
+            handicap: Number(handicap), // Store full handicap
+            netScore: netScoreValue, // Adjusted net score
             holes,
         };
 

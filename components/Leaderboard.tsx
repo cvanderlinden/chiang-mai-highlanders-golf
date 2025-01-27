@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Card from '@/components/Card';
 
+export const dynamic = 'force-dynamic';
+
 export default function Leaderboard() {
     const [leaderboard, setLeaderboard] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);

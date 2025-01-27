@@ -5,6 +5,8 @@ import connectToDatabase from '@/lib/mongoose';
 import TeeOff from '@/models/TeeOff';
 import dayjs from 'dayjs';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1', 10);

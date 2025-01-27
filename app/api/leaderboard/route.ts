@@ -6,6 +6,8 @@ import Score from '@/models/Score';
 import User from '@/models/User';
 import Course from '@/models/Course';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     await connectToDatabase();
 

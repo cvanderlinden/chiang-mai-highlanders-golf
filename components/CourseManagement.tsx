@@ -17,6 +17,8 @@ interface CourseManagementProps {
     user: { role: string }; // Assuming role is passed to determine if the user is an admin
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function CourseManagement() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [newCourse, setNewCourse] = useState({ name: '', slopeRating: '113', courseRating: '72', par: '72', mapLink: '' });

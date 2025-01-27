@@ -40,6 +40,8 @@ const calculateNetScoreDisplay = (netScore: number, par: number) => {
     return `${netScoreAdjusted} (${difference})`; // Final display value
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function RecentScores({ userId, isAdmin, refresh, onHandicapUpdate }: RecentScoresProps) {
     const [scores, setScores] = useState<Score[]>([]);
     const [expanded, setExpanded] = useState(false);
@@ -95,8 +97,9 @@ export default function RecentScores({ userId, isAdmin, refresh, onHandicapUpdat
             <div className="space-y-4">
                 {scores.map((score, index) => {
                     const adjustedPar = score.holes === 9 ? Math.round(score.courseId.par / 2) : score.courseId.par;
+                    const adjustedHandicap = score.holes === 9 ? score.handicap / 2 : score.handicap; // Adjust handicap for 9 holes
                     const grossDifference = calculateGrossScoreDifference(score.score, adjustedPar);
-                    const netScoreDisplay = calculateNetScoreDisplay(score.netScore, adjustedPar);
+                    const netScoreDisplay = calculateNetScoreDisplay(score.netScore, adjustedPar); // Uses already stored netScore
 
                     return (
                         <div
@@ -106,9 +109,9 @@ export default function RecentScores({ userId, isAdmin, refresh, onHandicapUpdat
                             }`}
                         >
                             <p className="text-lg">
-            <span className="font-semibold">
-                {score.userId.firstName} {score.userId.lastName.charAt(0)}.
-            </span>{' '}
+                                <span className="font-semibold">
+                                    {score.userId.firstName} {score.userId.lastName.charAt(0)}.
+                                </span>{' '}
                                 @ <span className="italic">{score.course}</span> on{' '}
                                 {new Date(score.date).toLocaleDateString('en-US', {
                                     year: 'numeric',
@@ -118,7 +121,7 @@ export default function RecentScores({ userId, isAdmin, refresh, onHandicapUpdat
                             </p>
                             <p className="text-sm text-gray-300">
                                 Shot a <span className="text-gold font-bold">{score.score} ({grossDifference})</span> on {score.holes} holes
-                                with a handicap of <span className="text-gold font-bold">{score.handicap}</span>, resulting in a net score of{' '}
+                                with a handicap of <span className="text-gold font-bold">{adjustedHandicap}</span>, resulting in a net score of{' '}
                                 <span className="text-gold font-bold">{netScoreDisplay}</span>.
                             </p>
                             {(isAdmin || score.userId._id === userId) && (
